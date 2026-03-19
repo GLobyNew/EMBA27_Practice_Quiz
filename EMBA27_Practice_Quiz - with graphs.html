@@ -1,0 +1,1359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>EMBA27 Statistics — Practice Quiz</title>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg: #0f1117;
+  --surface: #181b24;
+  --surface2: #1f2330;
+  --surface3: #282c3a;
+  --border: #2a2e3d;
+  --text: #e4e6ed;
+  --text-muted: #8b90a0;
+  --text-dim: #5c6070;
+  --accent: #6c9bff;
+  --accent-glow: rgba(108, 155, 255, 0.15);
+  --correct: #4ade80;
+  --correct-bg: rgba(74, 222, 128, 0.08);
+  --correct-border: rgba(74, 222, 128, 0.25);
+  --wrong: #f87171;
+  --wrong-bg: rgba(248, 113, 113, 0.08);
+  --wrong-border: rgba(248, 113, 113, 0.25);
+  --gold: #fbbf24;
+  --radius: 12px;
+  --radius-sm: 8px;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: 'DM Sans', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.app { max-width: 780px; margin: 0 auto; padding: 24px 20px 80px; }
+
+/* ── Start Screen ── */
+.start-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 85vh;
+  text-align: center;
+  animation: fadeIn 0.6s ease;
+}
+
+.start-screen .logo {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 20px;
+  opacity: 0.8;
+}
+
+.start-screen h1 {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(36px, 6vw, 52px);
+  font-weight: 400;
+  line-height: 1.15;
+  margin-bottom: 16px;
+  background: linear-gradient(135deg, var(--text) 0%, var(--text-muted) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.start-screen .subtitle {
+  font-size: 17px;
+  color: var(--text-muted);
+  margin-bottom: 44px;
+  max-width: 440px;
+}
+
+.mode-cards {
+  display: flex;
+  gap: 16px;
+  width: 100%;
+  max-width: 560px;
+  margin-bottom: 32px;
+}
+
+.mode-card {
+  flex: 1;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 28px 20px;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  text-align: left;
+}
+
+.mode-card:hover {
+  border-color: var(--accent);
+  background: var(--surface2);
+  transform: translateY(-2px);
+  box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+}
+
+.mode-card .mode-icon {
+  font-size: 28px;
+  margin-bottom: 14px;
+}
+
+.mode-card h3 {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.mode-card p {
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.5;
+}
+
+.session-selector {
+  width: 100%;
+  max-width: 560px;
+}
+
+.session-selector label {
+  display: block;
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.session-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+}
+
+.chip {
+  padding: 10px 18px;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 40px;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.chip:hover { border-color: var(--accent); color: var(--text); }
+.chip.active {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  color: var(--accent);
+}
+
+/* ── Header Bar ── */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 0;
+  margin-bottom: 8px;
+  border-bottom: 1px solid var(--border);
+  position: sticky;
+  top: 0;
+  background: var(--bg);
+  z-index: 100;
+}
+
+.header-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.back-btn {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  font-size: 20px;
+  padding: 4px;
+  transition: color 0.2s;
+}
+.back-btn:hover { color: var(--text); }
+
+.progress-info {
+  font-size: 14px;
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+.progress-info span { color: var(--text); font-weight: 600; }
+
+.progress-bar-wrap {
+  flex: 1;
+  max-width: 200px;
+  height: 4px;
+  background: var(--surface3);
+  border-radius: 4px;
+  overflow: hidden;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: var(--accent);
+  border-radius: 4px;
+  transition: width 0.4s ease;
+}
+
+.score-live {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 14px;
+  color: var(--correct);
+  font-weight: 500;
+}
+
+/* ── Question Card ── */
+.question-container {
+  animation: slideUp 0.35s ease;
+}
+
+@keyframes slideUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.question-meta {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 28px 0 14px;
+}
+
+.q-number {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--accent);
+  background: var(--accent-glow);
+  padding: 4px 10px;
+  border-radius: 20px;
+  letter-spacing: 0.5px;
+}
+
+.q-session {
+  font-size: 12px;
+  color: var(--text-dim);
+  font-weight: 500;
+}
+
+.question-text {
+  font-family: 'DM Serif Display', serif;
+  font-size: clamp(20px, 3.5vw, 26px);
+  font-weight: 400;
+  line-height: 1.4;
+  margin-bottom: 8px;
+  color: var(--text);
+}
+
+.question-context {
+  font-size: 15px;
+  color: var(--text-muted);
+  margin-bottom: 28px;
+  padding: 16px 20px;
+  background: var(--surface);
+  border-left: 3px solid var(--border);
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+  line-height: 1.65;
+}
+
+.question-context .quote {
+  font-style: italic;
+  color: var(--text);
+  display: block;
+  margin: 8px 0;
+}
+
+.question-context .table-data {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 13px;
+  margin: 10px 0;
+  color: var(--text);
+  line-height: 1.8;
+}
+
+.question-figure {
+  background: var(--surface2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px 16px 12px;
+  margin-bottom: 20px;
+  text-align: center;
+  overflow-x: auto;
+}
+
+.question-figure svg {
+  max-width: 100%;
+  height: auto;
+}
+
+.question-figure .fig-caption {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin-top: 8px;
+  font-style: italic;
+}
+
+/* ── Options ── */
+.options { display: flex; flex-direction: column; gap: 12px; margin-bottom: 32px; }
+
+.option {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 18px 20px;
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.option:hover:not(.disabled) {
+  border-color: var(--accent);
+  background: var(--surface2);
+}
+
+.option.selected {
+  border-color: var(--accent);
+  background: var(--accent-glow);
+}
+
+.option.correct-answer {
+  border-color: var(--correct-border) !important;
+  background: var(--correct-bg) !important;
+}
+
+.option.wrong-answer {
+  border-color: var(--wrong-border) !important;
+  background: var(--wrong-bg) !important;
+}
+
+.option.disabled { cursor: default; }
+
+.option-marker {
+  flex-shrink: 0;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  border: 2px solid var(--border);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text-dim);
+  transition: all 0.2s ease;
+  margin-top: 1px;
+}
+
+.option.selected .option-marker {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.option.correct-answer .option-marker {
+  border-color: var(--correct);
+  background: var(--correct);
+  color: var(--bg);
+}
+
+.option.wrong-answer .option-marker {
+  border-color: var(--wrong);
+  background: var(--wrong);
+  color: var(--bg);
+}
+
+.option-text {
+  font-size: 15px;
+  line-height: 1.55;
+  color: var(--text);
+  padding-top: 3px;
+}
+
+/* ── Buttons ── */
+.btn-row {
+  display: flex;
+  gap: 12px;
+  justify-content: flex-end;
+}
+
+.btn {
+  padding: 12px 28px;
+  border-radius: var(--radius-sm);
+  font-family: 'DM Sans', sans-serif;
+  font-size: 15px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+}
+.btn-primary:hover { filter: brightness(1.12); transform: translateY(-1px); }
+.btn-primary:disabled { opacity: 0.35; cursor: default; transform: none; filter: none; }
+
+.btn-ghost {
+  background: var(--surface2);
+  color: var(--text-muted);
+  border: 1px solid var(--border);
+}
+.btn-ghost:hover { color: var(--text); border-color: var(--text-muted); }
+
+/* ── Feedback ── */
+.feedback {
+  padding: 16px 20px;
+  border-radius: var(--radius-sm);
+  margin-bottom: 24px;
+  font-size: 14px;
+  line-height: 1.55;
+  animation: fadeIn 0.3s ease;
+}
+
+.feedback.correct {
+  background: var(--correct-bg);
+  border: 1px solid var(--correct-border);
+  color: var(--correct);
+}
+
+.feedback.wrong {
+  background: var(--wrong-bg);
+  border: 1px solid var(--wrong-border);
+  color: var(--wrong);
+}
+
+.feedback strong { font-weight: 600; }
+
+/* ── Results Screen ── */
+.results-screen {
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+  padding-top: 60px;
+}
+
+.results-score-ring {
+  width: 180px;
+  height: 180px;
+  margin: 0 auto 32px;
+  position: relative;
+}
+
+.results-score-ring svg { transform: rotate(-90deg); }
+
+.results-score-ring .ring-bg {
+  fill: none;
+  stroke: var(--surface3);
+  stroke-width: 8;
+}
+
+.results-score-ring .ring-fill {
+  fill: none;
+  stroke-width: 8;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 1.5s ease;
+}
+
+.results-score-text {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+}
+
+.results-score-text .pct {
+  font-family: 'DM Serif Display', serif;
+  font-size: 44px;
+  font-weight: 400;
+  line-height: 1;
+}
+
+.results-score-text .label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 4px;
+}
+
+.results-title {
+  font-family: 'DM Serif Display', serif;
+  font-size: 32px;
+  margin-bottom: 8px;
+}
+
+.results-subtitle {
+  font-size: 16px;
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.results-stats {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-bottom: 44px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-value {
+  font-family: 'JetBrains Mono', monospace;
+  font-size: 28px;
+  font-weight: 500;
+}
+
+.stat-value.green { color: var(--correct); }
+.stat-value.red { color: var(--wrong); }
+.stat-value.blue { color: var(--accent); }
+
+.stat-label {
+  font-size: 13px;
+  color: var(--text-dim);
+  margin-top: 4px;
+}
+
+.results-actions {
+  display: flex;
+  gap: 12px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+/* ── Review List ── */
+.review-list {
+  margin-top: 48px;
+  text-align: left;
+}
+
+.review-list h2 {
+  font-family: 'DM Serif Display', serif;
+  font-size: 24px;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.review-filter {
+  display: flex;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 28px;
+}
+
+.review-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 20px;
+  margin-bottom: 16px;
+}
+
+.review-item.was-wrong { border-left: 3px solid var(--wrong); }
+.review-item.was-correct { border-left: 3px solid var(--correct); }
+
+.review-q-head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.review-q-head .badge {
+  font-size: 11px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.badge.correct-badge { background: var(--correct-bg); color: var(--correct); border: 1px solid var(--correct-border); }
+.badge.wrong-badge { background: var(--wrong-bg); color: var(--wrong); border: 1px solid var(--wrong-border); }
+
+.review-question-text {
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+
+.review-answers {
+  font-size: 14px;
+  color: var(--text-muted);
+  line-height: 1.6;
+}
+
+.review-answers .your-answer { color: var(--wrong); }
+.review-answers .correct-answer-text { color: var(--correct); }
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  .mode-cards { flex-direction: column; }
+  .results-stats { gap: 24px; }
+  .header { flex-wrap: wrap; gap: 8px; }
+}
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+
+<script>
+// ── All 50 Questions ──
+const ALL_QUESTIONS = [
+  // Quiz Session 1
+  {session:1, question:"Which conclusion is most appropriate?",
+   context:`A country manager reports:\n<span class="quote">"Our average customer satisfaction score increased from 6.8 to 7.2 this quarter, so service quality clearly improved."</span>`,
+   options:["The increase proves that recent policy changes caused higher satisfaction.","The improvement is guaranteed because the mean increased.","The conclusion may be premature without understanding variability and sample composition.","Service quality improved for most customers."],
+   correct:2},
+  {session:1, question:"Which concern is most relevant?",
+   context:"A study finds a strong relationship between leadership training and employee performance within one firm, but the firm operates in a highly specialized niche market.",
+   options:["Internal validity","External validity","Measurement reliability","Data completeness"],
+   correct:1},
+  {session:1, question:"Which of the following variables is quantitative and discrete?",
+   context:null,
+   options:["Annual revenue in euros","Number of employees in a department","Country of residence","Customer satisfaction on a 1–5 Likert scale"],
+   correct:1},
+  {session:1, question:"Which concern is most relevant?",
+   context:`An HR team analyzes engagement survey results from 40 employees who volunteered to respond and concludes:\n<span class="quote">"Employee engagement across the company is high."</span>`,
+   options:["Measurement error due to poor survey design","Lack of statistical significance","Incorrect use of descriptive statistics","Sampling bias due to self-selection"],
+   correct:3},
+  {session:1, question:"Which classification is correct?",
+   context:`A consulting team analyzes the following variables from a leadership assessment study:\n<span class="table-data">• Leadership level (Analyst, Manager, Director, Executive)\n• Years with the firm\n• Performance rating (Low, Medium, High)\n• Monthly bonus amount (€)</span>`,
+   options:["Years with the firm: discrete; Monthly bonus: ordinal","Leadership level: quantitative; Years with the firm: nominal","Performance rating: ordinal; Monthly bonus: continuous","Leadership level: nominal; Performance rating: continuous"],
+   correct:2},
+  {session:1, question:"Which statement best evaluates this claim?",
+   context:`A manager states:\n<span class="quote">"Once we convert social media comments into numbers, the analysis becomes objective."</span>`,
+   options:["True—numerical data is inherently objective","True—structure eliminates interpretation bias","False—how unstructured data is coded can introduce bias","False—unstructured data cannot be analyzed statistically"],
+   correct:2},
+  {session:1, question:"What is the main statistical concern?",
+   context:"A retail chain wants to understand purchasing behavior of mall visitors and surveys shoppers on a Tuesday afternoon.",
+   options:["Incorrect variable measurement level","Measurement error","Sampling bias due to time-of-day effects","Outlier influence"],
+   correct:2},
+  {session:1, question:"Which statement is correct?",
+   context:"A company surveys 500 customers to estimate average satisfaction among all its European customers.",
+   options:["The survey eliminates sampling error by design","The 500 customers represent the population","The satisfaction score calculated from the survey is a parameter","The satisfaction score calculated from the survey is a statistic"],
+   correct:3},
+  {session:1, question:"What is the most appropriate response?",
+   context:`A finance manager analyzes monthly travel expenses (in €):\n<span class="table-data">1,200 · 1,350 · 1,400 · 1,280 · 1,310 · 9,800</span>\nThe manager proposes removing €9,800 "because it distorts the average."`,
+   options:["Replace it with the median to simplify analysis","Remove it immediately because it is far from the mean","Investigate whether it reflects an error, a rare event, or a different process","Keep it because outliers always reflect true behavior"],
+   correct:2},
+  {session:1, question:"Which is the most appropriate managerial response?",
+   context:"A marketing analyst finds a strong positive correlation between online advertising spend and weekly sales and recommends increasing the ad budget immediately.",
+   options:["Ask whether other factors could be driving both variables.","Increase spending only if the correlation is above 0.8.","Approve the increase because correlation implies causation.","Reject the analysis because correlations are meaningless."],
+   correct:0},
+
+  // Quiz Session 2
+  {session:2, question:"Which concern is most appropriate?",
+   context:"A regional bank compares this quarter's average loan default rate to last quarter's and finds a noticeable difference. The risk manager concludes that borrower behavior has changed materially. The analytics team notes that each quarter is based on a different random sample of loans.",
+   options:["Default rates cannot be compared across time","Large samples eliminate uncertainty","Sampling variation alone could explain the observed difference","Randomness disappears once outcomes are averaged"],
+   correct:2},
+  {session:2, question:"Which statement is correct?",
+   context:"An energy company models daily electricity demand as a random variable. On a specific winter day, demand turns out to be significantly higher than average due to unexpected weather conditions.",
+   options:["The observed demand equals the expected value","The observed demand is a realization of a random variable","Once observed, demand is no longer random","The high demand indicates the model is incorrect"],
+   correct:1},
+  {session:2, question:"Which statement best distinguishes probability from statistics in this context?",
+   context:"A logistics company assumes that delivery delays follow a particular probabilistic model based on past data. Over the next month, analysts collect new delivery-time observations and compare them to the model's predictions.",
+   options:["Probability eliminates uncertainty; statistics measures it","Statistics applies only after uncertainty has disappeared","Probability describes observed delays; statistics predicts future ones","Probability formalizes assumptions about uncertainty; statistics evaluates them using data"],
+   correct:3},
+  {session:2, question:"Which statement best reflects sound statistical reasoning?",
+   context:"A mid-sized e-commerce retailer experiences a sharp drop in weekly sales after introducing a new website layout. The Head of Sales argues that the redesign clearly harmed performance and should be rolled back immediately. The analytics team notes that demand has historically fluctuated week to week due to promotions, holidays, and competitor activity.",
+   options:["A single adverse outcome is sufficient evidence of failure","The observed drop could plausibly be due to random variation rather than the redesign","Randomness only applies in controlled experiments","Website changes always dominate other sources of variation"],
+   correct:1},
+  {session:2, question:"Which response best reflects correct interpretation?",
+   context:`A venture capital firm evaluates a portfolio investment with an expected return of €5 million. During a board discussion, a partner concludes:\n<span class="quote">"This means we should expect to earn €5 million if we proceed."</span>`,
+   options:["Expected value is a probability-weighted average, not a guaranteed payoff","Expected value applies only when outcomes are normally distributed","Expected value guarantees profitability over time","Expected value represents the most likely outcome"],
+   correct:0},
+  {session:2, question:"What is the best evaluation of this statement?",
+   context:`An operations team reports that the 95% confidence interval for average delivery time is [44, 47] minutes. A manager states:\n<span class="quote">"We can be 95% confident that the true average delivery time is between 44 and 47 minutes."</span>`,
+   options:["Incorrect because confidence intervals cannot be interpreted probabilistically","Incorrect—the 95% refers to long-run coverage, not probability for this specific interval","Correct only if the sample size is large","Correct interpretation of a confidence interval"],
+   correct:1},
+  {session:2, question:"Which assessment is most accurate?",
+   context:`A technology firm tests a new recommendation algorithm. The analytics team reports a p-value of 0.03 and summarizes the findings stating:\n<span class="quote">"There is a 97% chance that the new algorithm is better than the old one."</span>`,
+   options:["Correct if the test was randomized","Incorrect—p-values do not measure the probability that an algorithm is better","Correct interpretation of statistical significance","Incorrect because p-values must be below 0.01 to be useful"],
+   correct:1},
+  {session:2, question:"What is the most relevant statistical concern?",
+   context:"A consumer goods company conducts a large-scale customer survey. The sampling design ensures every customer had an equal probability of being invited, but younger customers were far less likely to respond. Management proceeds to generalize results to the entire customer base.",
+   options:["Non-response bias affecting representativeness","Measurement error in survey questions","Random sampling error due to small sample size","Selection bias caused by poor sampling design"],
+   correct:0},
+  {session:2, question:"Which interpretation is most appropriate?",
+   context:`A startup launching a new subscription service estimates a 30% probability that the product will fail within the first year. The CEO summarizes:\n<span class="quote">"This means the product will succeed in 70% of markets."</span>`,
+   options:["The probability quantifies uncertainty, not a deterministic success rate","The probability guarantees long-run outcomes","The CEO's statement is correct by definition","The estimate is invalid unless the product is launched repeatedly"],
+   correct:0},
+  {session:2, question:"Which variable is most appropriately modeled using a continuous probability distribution?",
+   context:"A telecom provider is analyzing different performance indicators to model uncertainty in operations.",
+   options:["Number of customers cancelling subscriptions per day","Time until a customer service call is answered","Number of complaints received on a billing cycle","Number of dropped calls per hour"],
+   correct:1},
+
+  // Quiz Session 3
+  {session:3, question:"Why is this distinction important?",
+   context:"Two datasets have the same mean and standard deviation. One distribution is symmetric, the other is strongly skewed.",
+   options:["Descriptive statistics fully capture distribution shape","Shape influences interpretation and choice of methods","Skewness affects only inferential statistics","Skewed data always imply data errors"],
+   correct:1},
+  {session:3, question:"What is the most appropriate evaluation?",
+   context:`A monthly report states: "Sales in April declined compared to March, indicating weakening demand." The analytics team notes that April sales are higher than April last year.`,
+   options:["The decline proves the trend is negative","The conclusion ignores relevant context and comparison benchmarks","Sales performance should be judged only annually","Month-to-month comparisons are always misleading"],
+   correct:1},
+  {session:3, question:"Which visualization is most appropriate to explore how age differs across categories?",
+   context:"A dataset contains customer ages (numeric) and product categories (categorical).",
+   options:["Box plot","Pie chart","Scatter plot","Line chart"],
+   correct:0},
+  {session:3, question:"Which interpretation is most appropriate?",
+   context:"An HR department summarizes employee tenure using the median rather than the mean. When asked why, the analyst explains that a few long-tenured employees strongly affect the average.",
+   options:["The median provides more detailed information than the mean","The median is more robust to extreme values than the mean","The median exaggerates variability","The median is always preferred for numerical data"],
+   correct:1},
+  {session:3, question:"Which issue is most relevant?",
+   context:`An analyst truncates the y-axis in a bar chart to "highlight small differences" in regional performance. Executives interpret the differences as substantial.`,
+   figure:`<svg viewBox="0 0 420 260" xmlns="http://www.w3.org/2000/svg" style="font-family:'DM Sans',sans-serif">
+  <text x="210" y="18" text-anchor="middle" fill="#e4e6ed" font-size="13" font-weight="600">Monthly Sales by Region (€)</text>
+  <!-- Y axis -->
+  <line x1="70" y1="30" x2="70" y2="220" stroke="#3a3f50" stroke-width="1"/>
+  <!-- Y gridlines & labels -->
+  <line x1="70" y1="220" x2="390" y2="220" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="62" y="224" text-anchor="end" fill="#5c6070" font-size="10">950k</text>
+  <line x1="70" y1="172" x2="390" y2="172" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="62" y="176" text-anchor="end" fill="#5c6070" font-size="10">960k</text>
+  <line x1="70" y1="124" x2="390" y2="124" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="62" y="128" text-anchor="end" fill="#5c6070" font-size="10">970k</text>
+  <line x1="70" y1="76" x2="390" y2="76" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="62" y="80" text-anchor="end" fill="#5c6070" font-size="10">980k</text>
+  <line x1="70" y1="30" x2="390" y2="30" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="62" y="34" text-anchor="end" fill="#5c6070" font-size="10">990k</text>
+  <!-- Bars: North ~997k, South ~1008k, East ~1003k, West ~1012k mapped to 950k-990k range -->
+  <!-- scale: 950k=220, 990k=30 => 1px = (40k/190) => val mapped = 220 - ((val-950000)/40000)*190 -->
+  <!-- North 997k => 220-((47000)/40000)*190 = 220-223=-3 cap at ~30... recalc for 950-1015k -->
+  <!-- Better range: 950k=220, 1015k=30 => 190px for 65k => 1k=2.923px -->
+  <!-- North 997: 220-((997-950)*2.923)=220-137.4=82.6 h=220-82.6=137.4 -->
+  <!-- South 1008: 220-((1008-950)*2.923)=220-169.5=50.5 h=169.5 -->
+  <!-- East 1003: 220-((1003-950)*2.923)=220-154.9=65.1 h=154.9 -->
+  <!-- West 1012: 220-((1012-950)*2.923)=220-181.2=38.8 h=181.2 -->
+  <rect x="95" y="83" width="56" height="137" rx="3" fill="#6c7a99"/>
+  <rect x="175" y="51" width="56" height="169" rx="3" fill="#6c7a99"/>
+  <rect x="255" y="65" width="56" height="155" rx="3" fill="#6c7a99"/>
+  <rect x="335" y="39" width="56" height="181" rx="3" fill="#6c7a99"/>
+  <!-- X labels -->
+  <text x="123" y="238" text-anchor="middle" fill="#8b90a0" font-size="11">North</text>
+  <text x="203" y="238" text-anchor="middle" fill="#8b90a0" font-size="11">South</text>
+  <text x="283" y="238" text-anchor="middle" fill="#8b90a0" font-size="11">East</text>
+  <text x="363" y="238" text-anchor="middle" fill="#8b90a0" font-size="11">West</text>
+  <!-- Y axis label -->
+  <text x="14" y="130" text-anchor="middle" fill="#5c6070" font-size="10" transform="rotate(-90,14,130)">Monthly sales (€)</text>
+</svg>`,
+   options:["Visual distortion due to scale choice","Sampling bias","Lack of statistical significance","Measurement error"],
+   correct:0},
+  {session:3, question:"Which description is most appropriate?",
+   context:"A histogram of customer waiting times shows a long right tail and a single peak close to zero.",
+   options:["Negatively skewed distribution","Uniform distribution","Positively skewed distribution","Symmetric distribution"],
+   correct:2},
+  {session:3, question:"Which critique is most appropriate?",
+   context:`A report shows only the mean of customer spend and concludes: "Customer spending is stable."`,
+   options:["Important information about dispersion and shape may be missing","Stability requires a hypothesis test","Means are never useful","The median would always be preferable"],
+   correct:0},
+  {session:3, question:"Which statement best describes this situation?",
+   context:"A dataset of transaction values has a mean of €82 and a median of €61. Most observations are clustered between €40 and €70, with a small number of very large purchases.",
+   options:["The median is misleading because it ignores large values","The distribution has negative skewness","The data are symmetrically distributed","The mean is pulled upward by extreme values"],
+   correct:3},
+  {session:3, question:"Which interpretation is most appropriate?",
+   context:"A histogram of order sizes has two clear peaks. Later, the analyst discovers the data combine individual orders and corporate bulk orders.",
+   options:["The mean should be removed","The histogram is incorrectly constructed","The distribution violates statistical assumptions","The pattern likely reflects two underlying sub-populations"],
+   correct:3},
+  {session:3, question:"Which conclusion is most appropriate?",
+   context:"Both regions have approximately the same median, but Region A has a much wider interquartile range.",
+   figure:`<svg viewBox="0 0 400 280" xmlns="http://www.w3.org/2000/svg" style="font-family:'DM Sans',sans-serif">
+  <text x="200" y="18" text-anchor="middle" fill="#e4e6ed" font-size="13" font-weight="600">Delivery Times by Region</text>
+  <!-- Y axis -->
+  <line x1="65" y1="30" x2="65" y2="235" stroke="#3a3f50" stroke-width="1"/>
+  <!-- Y gridlines: 35=235, 40=195, 45=155, 50=115, 55=75  => 1min = 8px -->
+  <line x1="65" y1="235" x2="350" y2="235" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="239" text-anchor="end" fill="#5c6070" font-size="10">35</text>
+  <line x1="65" y1="195" x2="350" y2="195" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="199" text-anchor="end" fill="#5c6070" font-size="10">40</text>
+  <line x1="65" y1="155" x2="350" y2="155" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="159" text-anchor="end" fill="#5c6070" font-size="10">45</text>
+  <line x1="65" y1="115" x2="350" y2="115" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="119" text-anchor="end" fill="#5c6070" font-size="10">50</text>
+  <line x1="65" y1="75" x2="350" y2="75" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="79" text-anchor="end" fill="#5c6070" font-size="10">55</text>
+  <!-- Region A box: Q1=42(191), median=45(155), Q3=48(131), whisker low=38(211), whisker high=54(79) -->
+  <line x1="150" y1="79" x2="150" y2="131" stroke="#8b90a0" stroke-width="1.5"/>
+  <line x1="150" y1="191" x2="150" y2="211" stroke="#8b90a0" stroke-width="1.5"/>
+  <rect x="110" y="131" width="80" height="60" rx="2" fill="none" stroke="#8b90a0" stroke-width="1.5"/>
+  <line x1="110" y1="155" x2="190" y2="155" stroke="#e4e6ed" stroke-width="2"/>
+  <line x1="130" y1="79" x2="170" y2="79" stroke="#8b90a0" stroke-width="1.5"/>
+  <line x1="130" y1="211" x2="170" y2="211" stroke="#8b90a0" stroke-width="1.5"/>
+  <!-- Region A outliers -->
+  <circle cx="150" cy="228" r="3.5" fill="none" stroke="#8b90a0" stroke-width="1.5"/>
+  <circle cx="150" cy="222" r="3.5" fill="none" stroke="#8b90a0" stroke-width="1.5"/>
+  <!-- Region B box: Q1=44(183), median=45(155), Q3=47(139), whisker low=40(195), whisker high=49(123) -->
+  <line x1="280" y1="123" x2="280" y2="139" stroke="#8b90a0" stroke-width="1.5"/>
+  <line x1="280" y1="183" x2="280" y2="195" stroke="#8b90a0" stroke-width="1.5"/>
+  <rect x="240" y="139" width="80" height="44" rx="2" fill="none" stroke="#8b90a0" stroke-width="1.5"/>
+  <line x1="240" y1="155" x2="320" y2="155" stroke="#e4e6ed" stroke-width="2"/>
+  <line x1="260" y1="123" x2="300" y2="123" stroke="#8b90a0" stroke-width="1.5"/>
+  <line x1="260" y1="195" x2="300" y2="195" stroke="#8b90a0" stroke-width="1.5"/>
+  <!-- Region B outlier -->
+  <circle cx="280" cy="107" r="3.5" fill="none" stroke="#8b90a0" stroke-width="1.5"/>
+  <!-- X labels -->
+  <text x="150" y="256" text-anchor="middle" fill="#8b90a0" font-size="12">Region A</text>
+  <text x="280" y="256" text-anchor="middle" fill="#8b90a0" font-size="12">Region B</text>
+  <!-- Y axis label -->
+  <text x="14" y="155" text-anchor="middle" fill="#5c6070" font-size="10" transform="rotate(-90,14,155)">Delivery time (minutes)</text>
+</svg>`,
+   options:["Delivery times are more variable in Region A","The sample size is larger for Region A","Region B has more extreme outliers","Region A has worse average performance"],
+   correct:0},
+
+  // Quiz Session 4
+  {session:4, question:"Which concern is most relevant?",
+   context:"A consulting team estimates the effect of a new pricing policy using data from only one quarter, chosen for convenience. Management wants to apply the results to future periods.",
+   options:["The sample may not be representative of future conditions","The model requires additional predictors","Regression coefficients cannot be interpreted over time","Time trends matter only in experiments"],
+   correct:0},
+  {session:4, question:"What is the most serious concern?",
+   context:"A firm pilots a new loyalty program but rolls it out first in its best-performing regions. A regression shows large positive effects.",
+   options:["Selection bias affecting coefficient interpretation","Low statistical power","Multicollinearity","Incorrect dependent variable"],
+   correct:0},
+  {session:4, question:"Which of the following situations violates one of the classical OLS assumptions?",
+   context:"You are analyzing the relationship between employees' monthly productivity and training hours using OLS regression. Assume the classical OLS assumptions hold.",
+   options:["The relationship between productivity and training is approximately linear in the parameters","Firms with higher training hours also have unobserved 'learning culture' factors that directly raise productivity","The residuals average close to zero","The variance of productivity is similar across training-hour levels"],
+   correct:1},
+  {session:4, question:"Which interpretation is most appropriate?",
+   context:`A senior manager states:\n<span class="quote">"Advertising only increases sales when store visits are high."</span>`,
+   figure:`<svg viewBox="0 0 420 280" xmlns="http://www.w3.org/2000/svg" style="font-family:'DM Sans',sans-serif">
+  <text x="210" y="18" text-anchor="middle" fill="#e4e6ed" font-size="13" font-weight="600">Predicted Sales by Store Visits and Advertising Level</text>
+  <!-- Axes -->
+  <line x1="65" y1="30" x2="65" y2="230" stroke="#3a3f50" stroke-width="1"/>
+  <line x1="65" y1="230" x2="390" y2="230" stroke="#3a3f50" stroke-width="1"/>
+  <!-- Y gridlines: 50=210, 60=170, 70=130, 80=90, 90=50, 100=10 => range 50-100 maps to 210-10 => 1unit=4px -->
+  <line x1="65" y1="210" x2="390" y2="210" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="214" text-anchor="end" fill="#5c6070" font-size="10">50</text>
+  <line x1="65" y1="170" x2="390" y2="170" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="174" text-anchor="end" fill="#5c6070" font-size="10">60</text>
+  <line x1="65" y1="130" x2="390" y2="130" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="134" text-anchor="end" fill="#5c6070" font-size="10">70</text>
+  <line x1="65" y1="90" x2="390" y2="90" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="94" text-anchor="end" fill="#5c6070" font-size="10">80</text>
+  <line x1="65" y1="50" x2="390" y2="50" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="54" text-anchor="end" fill="#5c6070" font-size="10">90</text>
+  <line x1="65" y1="10" x2="390" y2="10" stroke="#2a2e3d" stroke-width="0.5"/>
+  <text x="57" y="14" text-anchor="end" fill="#5c6070" font-size="10">100</text>
+  <!-- X ticks: 0=65, 2=130, 4=195, 6=260, 8=325, 10=390  => 1visit=32.5px -->
+  <text x="65" y="246" text-anchor="middle" fill="#5c6070" font-size="10">0</text>
+  <text x="130" y="246" text-anchor="middle" fill="#5c6070" font-size="10">2</text>
+  <text x="195" y="246" text-anchor="middle" fill="#5c6070" font-size="10">4</text>
+  <text x="260" y="246" text-anchor="middle" fill="#5c6070" font-size="10">6</text>
+  <text x="325" y="246" text-anchor="middle" fill="#5c6070" font-size="10">8</text>
+  <text x="390" y="246" text-anchor="middle" fill="#5c6070" font-size="10">10</text>
+  <!-- Low advertising line: 49 at x=0 to 70 at x=10 -->
+  <!-- 49 => 210-(-1*4)=210+4=214 nah, 50=210 so 49=214, 70=130 -->
+  <line x1="65" y1="214" x2="390" y2="130" stroke="#6c9bff" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- High advertising line: 49 at x=0 to 100 at x=10 -->
+  <line x1="65" y1="214" x2="390" y2="10" stroke="#f59e42" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Legend -->
+  <line x1="85" y1="40" x2="105" y2="40" stroke="#6c9bff" stroke-width="2.5"/>
+  <text x="110" y="44" fill="#8b90a0" font-size="11">Low advertising</text>
+  <line x1="85" y1="56" x2="105" y2="56" stroke="#f59e42" stroke-width="2.5"/>
+  <text x="110" y="60" fill="#8b90a0" font-size="11">High advertising</text>
+  <!-- Axis labels -->
+  <text x="227" y="266" text-anchor="middle" fill="#8b90a0" font-size="11">Store visits</text>
+  <text x="14" y="125" text-anchor="middle" fill="#5c6070" font-size="10" transform="rotate(-90,14,125)">Sales (€000s)</text>
+</svg>`,
+   options:["Advertising has no effect when store visits are low","The model violates linear regression assumptions","Store visits cause advertising effectiveness","The marginal effect of store visits on sales is stronger when advertising intensity is high"],
+   correct:3},
+  {session:4, question:"Which evaluation is most appropriate?",
+   context:`An HR analytics team estimates a model:\n<span class="table-data">Remote Work (1=yes): coeff 0.38, p=0.073\nTenure (years): coeff 0.15, p=0.013\nIntercept: 2.9, p=0.021</span>\nA manager says: <span class="quote">"Remote work has no effect on productivity."</span>`,
+   options:["Incorrect, because p-values apply only to large samples","Correct, because the coefficient is not statistically significant","Correct, because tenure absorbs the effect","Too strong, because the estimate is uncertain but not zero"],
+   correct:3},
+  {session:4, question:"Which statement about the error term ε is correct?",
+   context:`In the multivariate regression:\n<span class="table-data">Sales_i = β₀ + β₁·Price_i + β₂·Advertising_i + ε_i</span>`,
+   options:["It represents unobserved factors affecting sales that are uncorrelated with Price and Advertising","It equals the predicted value of Sales minus the actual value","It captures omitted factors that are correlated with Price","It measures the goodness of fit of the model"],
+   correct:0},
+  {session:4, question:"Which assessment is most accurate?",
+   context:`A marketing analyst reports a p-value of 0.03 for the effect of a new campaign. The manager writes:\n<span class="quote">"There is a 97% chance the campaign works."</span>`,
+   options:["Correct interpretation of statistical significance","Correct if the sample size is large","Incorrect, because p-values do not measure the probability an effect is real","Incorrect, because p-values must be below 0.01"],
+   correct:2},
+  {session:4, question:"Which assessment is most appropriate?",
+   context:`A national grocery chain estimates a regression:\n<span class="table-data">Advertising Spend (€000s): coeff 11.2, p=0.004\nStore Size (sqm): coeff 0.06, p=0.038\nIntercept: 210, p=0.067\nR² = 0.62</span>\nThe COO concludes: <span class="quote">"Since R² is 62%, we are capturing almost all relevant drivers of sales."</span>`,
+   options:["Correct, because both coefficients are statistically significant","Incorrect, because R² reflects explained variance, not completeness or causality","Incorrect, because R² should always be close to 1","Correct, because R² above 0.6 is high in business data"],
+   correct:1},
+  {session:4, question:'In a multiple linear regression model, the phrase "holding other variables constant" means:',
+   context:null,
+   options:["The effect of one variable is measured while statistically controlling for the others in the model","Variation in other predictors is ignored during estimation","Each predictor is standardized before estimation","Other predictors are assumed to have zero correlation with the outcome"],
+   correct:0},
+  {session:4, question:"Which interpretation of the intercept (€120) is most appropriate?",
+   context:"A streaming company runs a regression to predict customer lifetime value. The estimated intercept is €120. An executive asks what this number represents.",
+   options:["The minimum observed lifetime value","The average lifetime value across all customers","A measure of model accuracy","The predicted lifetime value when all predictors equal zero"],
+   correct:3},
+
+  // Quiz Session 5
+  {session:5, question:"Which interpretation is most appropriate?",
+   context:`A sales forecasting model has the following error metrics:\n<span class="table-data">MAE = €4,000 · MAPE = 3% · RMSE = €12,000</span>`,
+   options:["Large forecast misses occur occasionally and are heavily penalized by RMSE","The model is poor because RMSE is largest","The model is inconsistent across metrics","MAE and MAPE measure different variables"],
+   correct:0},
+  {session:5, question:"Which concern should management raise?",
+   context:"A predictive model performs extremely well on historical data but poorly on new observations. The data science team suggests collecting more features.",
+   options:["The loss function is incorrect","The model is biased","The model may be overfitting noise rather than signal","The test set is too small"],
+   correct:2},
+  {session:5, question:"Which concern is most relevant?",
+   context:`A bank wants to predict whether a loan applicant will default (Yes/No). An analyst suggests using linear regression "because it's simple and interpretable."`,
+   options:["Linear regression cannot be estimated using data","Linear regression cannot include multiple predictors","Linear regression is inefficient for large samples","Linear regression can produce predicted probabilities below 0 or above 1"],
+   correct:3},
+  {session:5, question:"Which response is most appropriate?",
+   context:`You are shown a 12-month demand forecast with a widening prediction interval. A manager states:\n<span class="quote">"Demand will follow the central forecast line."</span>`,
+   options:["Correct, because forecasts are unbiased","Incorrect, because prediction intervals show past errors","Correct, because uncertainty shrinks over time","Incorrect, because the forecast represents a range of plausible outcomes"],
+   correct:3},
+  {session:5, question:"Which evaluation is most appropriate?",
+   context:"A strategy team explains last year's revenue decline using competitor entry and pricing pressure. In the next meeting, the same team uses this explanation to forecast next year's revenue with high confidence.",
+   options:["Valid, because causal understanding removes uncertainty","Valid, because explanation provides the strongest basis for prediction","Invalid, because prediction requires machine learning models","Invalid, because explanatory insight does not automatically translate into predictive accuracy"],
+   correct:3},
+  {session:5, question:"Which trade-off is being made?",
+   context:"A classification model for fraud detection is tuned to minimize false positives. As a result, many fraudulent cases are missed.",
+   options:["Interpretability–accuracy trade-off","Bias–variance trade-off","False positives versus false negatives","Overfitting versus underfitting"],
+   correct:2},
+  {session:5, question:"Which statement best reflects sound risk reasoning?",
+   context:"Two investment projects have the same expected profit. Project A has highly variable outcomes, while Project B's outcomes are tightly clustered.",
+   options:["Expected value already captures risk","Project A is preferable because it has higher upside","The projects are equally attractive","Risk depends on the distribution of outcomes, not only the expected value"],
+   correct:3},
+  {session:5, question:"Which consideration is most appropriate?",
+   context:"Two forecasting models are compared: Model A (simple, transparent, slightly less accurate) and Model B (complex, highly accurate in-sample, difficult to explain). Senior management asks which model to deploy.",
+   options:["Always choose the most interpretable model","The choice depends on the decision context and cost of errors","Always choose the most accurate model","Accuracy and interpretability cannot be traded off"],
+   correct:1},
+  {session:5, question:"Which adjustment is most defensible?",
+   context:"A retailer forecasts demand using a moving average. Recently, demand shows strong upward trend and recurring seasonal peaks.",
+   options:["Switch to a model that explicitly accounts for trend and seasonality","Remove recent observations","Use regression instead of forecasting","Increase the moving-average window"],
+   correct:0},
+  {session:5, question:"Which interpretation is most appropriate?",
+   context:`A marketing team predicts customer churn using a binary model. The output for one customer is 0.72. A manager concludes:\n<span class="quote">"This customer will churn."</span>`,
+   options:["The model is incorrect unless churn actually occurs","The customer will churn in 72% of cases","The model estimates a 72% probability of churn, not a guaranteed outcome","The model predicts churn with certainty"],
+   correct:2},
+];
+
+const SESSION_NAMES = {
+  1: "Data & Sampling",
+  2: "Probability & Inference",
+  3: "Distributions & Visualization",
+  4: "Regression",
+  5: "Forecasting & Prediction"
+};
+
+// ── App State ──
+let state = {
+  screen: 'start', // start | quiz | results
+  mode: 'all', // all | session
+  sessions: [1,2,3,4,5],
+  questions: [],
+  currentIndex: 0,
+  answers: [], // {selected, correct, isCorrect}
+  selectedOption: null,
+  answered: false,
+  reviewFilter: 'all', // all | wrong
+};
+
+function shuffle(arr) {
+  const a = [...arr];
+  for (let i = a.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [a[i], a[j]] = [a[j], a[i]];
+  }
+  return a;
+}
+
+function prepareQuestions(sessions) {
+  let qs = ALL_QUESTIONS.filter(q => sessions.includes(q.session));
+  qs = shuffle(qs);
+  // Shuffle options for each question, tracking correct answer
+  return qs.map(q => {
+    const indices = q.options.map((_, i) => i);
+    const shuffled = shuffle(indices);
+    return {
+      ...q,
+      displayOptions: shuffled.map(i => q.options[i]),
+      correctDisplay: shuffled.indexOf(q.correct),
+    };
+  });
+}
+
+function render() {
+  const app = document.getElementById('app');
+  if (state.screen === 'start') app.innerHTML = renderStart();
+  else if (state.screen === 'quiz') app.innerHTML = renderQuiz();
+  else if (state.screen === 'results') app.innerHTML = renderResults();
+  bindEvents();
+}
+
+// ── Start Screen ──
+function renderStart() {
+  const chipHTML = [1,2,3,4,5].map(s => {
+    const active = state.sessions.includes(s) ? 'active' : '';
+    return `<div class="chip ${active}" data-session="${s}">Session ${s}: ${SESSION_NAMES[s]}</div>`;
+  }).join('');
+
+  return `
+    <div class="start-screen">
+      <div class="logo">EMBA27 Statistics</div>
+      <h1>Practice Quiz</h1>
+      <p class="subtitle">50 questions across 5 sessions. Test your knowledge before the exam.</p>
+      <div class="mode-cards">
+        <div class="mode-card" data-mode="all">
+          <div class="mode-icon">⚡</div>
+          <h3>All Questions</h3>
+          <p>Randomized mix of all 50 questions from every session.</p>
+        </div>
+        <div class="mode-card" data-mode="session">
+          <div class="mode-icon">🎯</div>
+          <h3>By Session</h3>
+          <p>Focus on specific topics. Pick one or more sessions below.</p>
+        </div>
+      </div>
+      <div class="session-selector" style="display:${state.mode === 'session' ? 'block' : 'none'}">
+        <label>Select sessions</label>
+        <div class="session-chips">${chipHTML}</div>
+        <div style="text-align:center;margin-top:20px;">
+          <button class="btn btn-primary" id="startFiltered" ${state.sessions.length === 0 ? 'disabled' : ''}>
+            Start (${ALL_QUESTIONS.filter(q => state.sessions.includes(q.session)).length} questions)
+          </button>
+        </div>
+      </div>
+    </div>`;
+}
+
+// ── Quiz Screen ──
+function renderQuiz() {
+  const q = state.questions[state.currentIndex];
+  const total = state.questions.length;
+  const progress = ((state.currentIndex) / total) * 100;
+  const correctCount = state.answers.filter(a => a.isCorrect).length;
+  const labels = ['A','B','C','D'];
+
+  const contextHTML = q.context
+    ? `<div class="question-context">${q.context.replace(/\n/g, '<br>')}</div>`
+    : '';
+
+  const figureHTML = q.figure
+    ? `<div class="question-figure">${q.figure}</div>`
+    : '';
+
+  const optionsHTML = q.displayOptions.map((opt, i) => {
+    let cls = 'option';
+    if (state.answered) {
+      cls += ' disabled';
+      if (i === q.correctDisplay) cls += ' correct-answer';
+      else if (i === state.selectedOption && i !== q.correctDisplay) cls += ' wrong-answer';
+    } else {
+      if (i === state.selectedOption) cls += ' selected';
+    }
+    return `<div class="${cls}" data-idx="${i}">
+      <div class="option-marker">${state.answered ? (i === q.correctDisplay ? '✓' : (i === state.selectedOption ? '✗' : labels[i])) : labels[i]}</div>
+      <div class="option-text">${opt}</div>
+    </div>`;
+  }).join('');
+
+  let feedbackHTML = '';
+  if (state.answered) {
+    if (state.selectedOption === q.correctDisplay) {
+      feedbackHTML = `<div class="feedback correct"><strong>Correct!</strong> Well done.</div>`;
+    } else {
+      feedbackHTML = `<div class="feedback wrong"><strong>Incorrect.</strong> The right answer is <strong>${labels[q.correctDisplay]}</strong>.</div>`;
+    }
+  }
+
+  const isLast = state.currentIndex === total - 1;
+
+  return `
+    <div class="header">
+      <div class="header-left">
+        <button class="back-btn" id="quitBtn" title="Quit">✕</button>
+        <div class="progress-info"><span>${state.currentIndex + 1}</span> / ${total}</div>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${progress}%"></div></div>
+      <div class="score-live">${correctCount} ✓</div>
+    </div>
+    <div class="question-container" key="${state.currentIndex}">
+      <div class="question-meta">
+        <span class="q-number">Q${state.currentIndex + 1}</span>
+        <span class="q-session">Session ${q.session} · ${SESSION_NAMES[q.session]}</span>
+      </div>
+      <div class="question-text">${q.question}</div>
+      ${figureHTML}
+      ${contextHTML}
+      <div class="options">${optionsHTML}</div>
+      ${feedbackHTML}
+      <div class="btn-row">
+        ${!state.answered
+          ? `<button class="btn btn-primary" id="checkBtn" ${state.selectedOption === null ? 'disabled' : ''}>Check Answer</button>`
+          : `<button class="btn btn-primary" id="nextBtn">${isLast ? 'See Results' : 'Next Question →'}</button>`
+        }
+      </div>
+    </div>`;
+}
+
+// ── Results Screen ──
+function renderResults() {
+  const total = state.questions.length;
+  const correct = state.answers.filter(a => a.isCorrect).length;
+  const wrong = total - correct;
+  const pct = Math.round((correct / total) * 100);
+
+  const circumference = 2 * Math.PI * 76;
+  const offset = circumference - (pct / 100) * circumference;
+  const ringColor = pct >= 80 ? 'var(--correct)' : pct >= 50 ? 'var(--gold)' : 'var(--wrong)';
+
+  let title, subtitle;
+  if (pct === 100) { title = 'Perfect Score!'; subtitle = 'You nailed every single question.'; }
+  else if (pct >= 80) { title = 'Excellent!'; subtitle = 'Strong command of the material.'; }
+  else if (pct >= 60) { title = 'Good Effort!'; subtitle = 'Review the missed questions to solidify your understanding.'; }
+  else { title = 'Keep Practicing!'; subtitle = 'Focus on the topics you missed and try again.'; }
+
+  const wrongQs = state.answers.map((a, i) => ({...a, idx: i})).filter(a => !a.isCorrect);
+  const filtered = state.reviewFilter === 'wrong' ? wrongQs : state.answers.map((a, i) => ({...a, idx: i}));
+  const labels = ['A','B','C','D'];
+
+  const reviewHTML = filtered.map(a => {
+    const q = state.questions[a.idx];
+    const cls = a.isCorrect ? 'was-correct' : 'was-wrong';
+    const badge = a.isCorrect
+      ? '<span class="badge correct-badge">Correct</span>'
+      : '<span class="badge wrong-badge">Incorrect</span>';
+    const answerDetail = a.isCorrect
+      ? `<span class="correct-answer-text">✓ ${labels[a.correct]}: ${q.displayOptions[a.correct]}</span>`
+      : `<span class="your-answer">✗ Your answer: ${labels[a.selected]}: ${q.displayOptions[a.selected]}</span><br><span class="correct-answer-text">✓ Correct: ${labels[a.correct]}: ${q.displayOptions[a.correct]}</span>`;
+
+    return `<div class="review-item ${cls}">
+      <div class="review-q-head">
+        ${badge}
+        <span class="q-session" style="margin-left:auto;">Session ${q.session}</span>
+      </div>
+      <div class="review-question-text">${q.question}</div>
+      ${q.figure ? `<div class="question-figure" style="margin-bottom:12px;">${q.figure}</div>` : ''}
+      ${q.context ? `<div class="question-context" style="margin-bottom:12px;font-size:13px;">${q.context.replace(/\n/g, '<br>')}</div>` : ''}
+      <div class="review-answers">${answerDetail}</div>
+    </div>`;
+  }).join('');
+
+  return `
+    <div class="results-screen">
+      <div class="results-score-ring">
+        <svg width="180" height="180" viewBox="0 0 180 180">
+          <circle class="ring-bg" cx="90" cy="90" r="76"/>
+          <circle class="ring-fill" cx="90" cy="90" r="76"
+            stroke="${ringColor}"
+            stroke-dasharray="${circumference}"
+            stroke-dashoffset="${offset}"/>
+        </svg>
+        <div class="results-score-text">
+          <div class="pct" style="color:${ringColor}">${pct}%</div>
+          <div class="label">${correct}/${total}</div>
+        </div>
+      </div>
+      <div class="results-title">${title}</div>
+      <div class="results-subtitle">${subtitle}</div>
+      <div class="results-stats">
+        <div class="stat-item"><div class="stat-value green">${correct}</div><div class="stat-label">Correct</div></div>
+        <div class="stat-item"><div class="stat-value red">${wrong}</div><div class="stat-label">Wrong</div></div>
+        <div class="stat-item"><div class="stat-value blue">${total}</div><div class="stat-label">Total</div></div>
+      </div>
+      <div class="results-actions">
+        <button class="btn btn-primary" id="retryBtn">Try Again</button>
+        <button class="btn btn-ghost" id="homeBtn">Back to Menu</button>
+      </div>
+      ${total > 0 ? `
+      <div class="review-list">
+        <h2>Question Review</h2>
+        <div class="review-filter">
+          <div class="chip ${state.reviewFilter === 'all' ? 'active' : ''}" data-filter="all">All (${total})</div>
+          <div class="chip ${state.reviewFilter === 'wrong' ? 'active' : ''}" data-filter="wrong">Wrong Only (${wrong})</div>
+        </div>
+        ${reviewHTML}
+      </div>` : ''}
+    </div>`;
+}
+
+// ── Event Binding ──
+function bindEvents() {
+  // Start screen
+  document.querySelectorAll('.mode-card').forEach(el => {
+    el.addEventListener('click', () => {
+      const mode = el.dataset.mode;
+      if (mode === 'all') {
+        state.sessions = [1,2,3,4,5];
+        state.questions = prepareQuestions(state.sessions);
+        state.currentIndex = 0;
+        state.answers = [];
+        state.selectedOption = null;
+        state.answered = false;
+        state.screen = 'quiz';
+        render();
+      } else {
+        state.mode = 'session';
+        render();
+      }
+    });
+  });
+
+  document.querySelectorAll('.session-chips .chip').forEach(el => {
+    el.addEventListener('click', () => {
+      const s = parseInt(el.dataset.session);
+      if (state.sessions.includes(s)) {
+        state.sessions = state.sessions.filter(x => x !== s);
+      } else {
+        state.sessions.push(s);
+      }
+      render();
+    });
+  });
+
+  const startBtn = document.getElementById('startFiltered');
+  if (startBtn) {
+    startBtn.addEventListener('click', () => {
+      state.questions = prepareQuestions(state.sessions);
+      state.currentIndex = 0;
+      state.answers = [];
+      state.selectedOption = null;
+      state.answered = false;
+      state.screen = 'quiz';
+      render();
+    });
+  }
+
+  // Quiz screen
+  document.querySelectorAll('.option:not(.disabled)').forEach(el => {
+    el.addEventListener('click', () => {
+      if (state.answered) return;
+      state.selectedOption = parseInt(el.dataset.idx);
+      render();
+    });
+  });
+
+  const checkBtn = document.getElementById('checkBtn');
+  if (checkBtn) {
+    checkBtn.addEventListener('click', () => {
+      if (state.selectedOption === null) return;
+      state.answered = true;
+      const q = state.questions[state.currentIndex];
+      state.answers.push({
+        selected: state.selectedOption,
+        correct: q.correctDisplay,
+        isCorrect: state.selectedOption === q.correctDisplay,
+      });
+      render();
+    });
+  }
+
+  const nextBtn = document.getElementById('nextBtn');
+  if (nextBtn) {
+    nextBtn.addEventListener('click', () => {
+      if (state.currentIndex < state.questions.length - 1) {
+        state.currentIndex++;
+        state.selectedOption = null;
+        state.answered = false;
+        render();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      } else {
+        state.screen = 'results';
+        render();
+        window.scrollTo({top: 0, behavior: 'smooth'});
+      }
+    });
+  }
+
+  const quitBtn = document.getElementById('quitBtn');
+  if (quitBtn) {
+    quitBtn.addEventListener('click', () => {
+      if (confirm('Quit the quiz and go back to the menu?')) {
+        state.screen = 'start';
+        state.mode = 'all';
+        render();
+      }
+    });
+  }
+
+  // Results screen
+  const retryBtn = document.getElementById('retryBtn');
+  if (retryBtn) {
+    retryBtn.addEventListener('click', () => {
+      state.questions = prepareQuestions(state.sessions);
+      state.currentIndex = 0;
+      state.answers = [];
+      state.selectedOption = null;
+      state.answered = false;
+      state.screen = 'quiz';
+      render();
+      window.scrollTo({top: 0, behavior: 'smooth'});
+    });
+  }
+
+  const homeBtn = document.getElementById('homeBtn');
+  if (homeBtn) {
+    homeBtn.addEventListener('click', () => {
+      state.screen = 'start';
+      state.mode = 'all';
+      state.reviewFilter = 'all';
+      render();
+    });
+  }
+
+  document.querySelectorAll('.review-filter .chip').forEach(el => {
+    el.addEventListener('click', () => {
+      state.reviewFilter = el.dataset.filter;
+      render();
+    });
+  });
+}
+
+// ── Keyboard shortcuts ──
+document.addEventListener('keydown', (e) => {
+  if (state.screen !== 'quiz') return;
+  if (!state.answered) {
+    if (['1','2','3','4'].includes(e.key)) {
+      state.selectedOption = parseInt(e.key) - 1;
+      render();
+    }
+    if (e.key === 'Enter' && state.selectedOption !== null) {
+      document.getElementById('checkBtn')?.click();
+    }
+  } else {
+    if (e.key === 'Enter' || e.key === 'ArrowRight' || e.key === ' ') {
+      e.preventDefault();
+      document.getElementById('nextBtn')?.click();
+    }
+  }
+});
+
+// ── Init ──
+render();
+</script>
+</body>
+</html>
